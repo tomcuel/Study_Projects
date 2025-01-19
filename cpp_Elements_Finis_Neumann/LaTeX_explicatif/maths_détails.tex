@@ -1,0 +1,178 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+% Packages de base
+\usepackage[utf8]{inputenc} % Encodage UTF-8
+\usepackage[T1]{fontenc} % Encodage des fontes
+\usepackage[french]{babel} % Langue française
+\usepackage{amsmath, amssymb} % Mathématiques avancées
+\usepackage{geometry} % Mise en page
+\usepackage{graphicx} % Inclusion d'images
+
+% Packages pour les figures et schémas
+\usepackage{tikz} % Dessins et figures
+\usepackage{float} % Pour contrôler le placement des figures
+
+% Personnalisation des légendes
+\usepackage{caption}
+
+% Notes de bas de page personnalisées
+\usepackage{footmisc}
+\geometry{top=2cm, bottom=2cm, left=2cm, right=2cm}
+
+\title{Résolution du problème de Neumann par éléments finis en C++}
+\date{}
+\author{}
+\begin{document}
+
+\maketitle
+
+\section*{Objectifs}
+    Réaliser un programme C++ permettant de résoudre par éléments finis d'ordre 1 le problème de Neumann dans un domaine borné \(\Omega\) de dimension 1 ou 2 :
+    \[
+    \begin{cases}
+    k^2 u - \Delta u = f & \text{dans } \Omega \quad (f \in L^2(\Omega)), \\
+    \frac{\partial u}{\partial n} = 0 & \text{sur } \partial\Omega.
+    \end{cases}
+    \]
+    Un peu comme cela été fait dans le cadre d'un projet Matlab plus tôt dans l'année, mais ici en utilisant le langage C++ \textit{(en orienté objet)} afin de permettre une résolution plus rapide
+    à l'occasion de l'introduction de la programmation scientifique.
+
+
+\section*{Formulation du problème}
+    La discrétisation de la formulation de ce problème dans l'espace des éléments finies \(V_h\), donné par :
+    \[
+    V_h = \{v \in C^0(\overline{\Omega}) : v|_{E_\ell} \in \mathbb{P}_1(E_\ell), \forall \ell = 1, L\}
+    \]
+    où \(\bigcup\limits_{\ell=1}^L E_\ell = \overline{\Omega}\) (\(E_\ell\) est un segment ou un triangle), conduit au syst\`eme linéaire :
+    \[
+    (\mathbb{K} + k^2 \mathbb{M}) \vec{U} = \mathbb{M} \vec{F}
+    \]
+    avec :
+    \[
+    K_{ij} = \int_{\Omega} \nabla w_i \cdot \nabla w_j \, dx, \quad M_{ij} = \int_{\Omega} w_i w_j \, dx, \quad F_i = f(M_i), \quad \forall i, j = 1, N,
+    \]
+    et \(w_i \in V_h\) tel que \(w_i(M_j) = \delta_{ij} \quad \forall i, j = 1, N\) \\
+    Il faudra donc fabriquer les matrices de masse et de rigidité \(\mathbb{M}\) et \(\mathbb{K}\) et résoudre le système linéaire pour obtenir la solution approchée.
+
+
+\section{Classes implémentées}
+
+    \begin{enumerate}[label=\arabic*]
+        \item \textbf{Classe Point :} gestion de points 1D ou 2D
+        \begin{enumerate}[label=\alph*.]
+            \item Implémentation des constructeurs
+            \item Surcharge de l'opérateur \texttt{<<} pour afficher un point sous la forme \((x)\) ou \((x, y)\)
+            \item Surcharge des opérateurs des fonctions membres et externes pour les points
+            \item Fonction \texttt{mesure} pour calculer la surface d'un triangle donné par trois sommets \(A, B, C\), avec :
+                \[
+                \text{mesure}(A, B, C) = \frac{1}{2} |\overrightarrow{AB} \times \overrightarrow{AC}|.
+                \]
+        \end{enumerate}
+
+        \item \textbf{Classe Maillage :} gestion des maillages 1D et 2D
+        \begin{enumerate}[label=\alph*.]
+            \item Implémentation des constructeurs qui exporte les données du maillage dans un fichier, ou chargent des données de maillage provenant d'un fichier.
+            \item Fonctions d'affichage avec un méthode en \texttt{print} et une surcharge de l'opérateur \texttt{<<}
+            \item Classe \texttt{Maillage1D} pour le maillage d'un segment \([a, b]\) en \(m\) intervalles.
+            \item Classe \texttt{Maillage2D} pour le maillage du carré unité \([0, 1] \times [0, 1]\) en \(m \times n\) rectangles, chaque rectangle étant subdivisé en deux triangles aléatoirement, qui peut être dilaté selon l'espace que l'on veut mailler.
+            \item Le carré unité $[0, 1] \times [0, 1]$ est maillé en se basant sur un découpage en $m > 0$ segments suivant l'axe $x$ et en $n > 0$ segments suivant l'axe $y$. Ce découpage conduit à $m \times n$ rectangles de taille $1/m$ par $1/n$. En parcourant les rectangles de gauche à droite et de bas en haut, les coordonnées des rectangles (nœuds du maillage) sont données par les formules suivantes :
+                \[
+                \forall i = 1, \ldots, m, \, j = 1, \ldots, n
+                \]
+                \[
+                P_{ij} = \left( \frac{i-1}{m}, \frac{j-1}{n} \right), \quad 
+                P_{i+1,j} = \left( \frac{i}{m}, \frac{j-1}{n} \right),
+                \]
+                \[
+                P_{i,j+1} = \left( \frac{i-1}{m}, \frac{j}{n} \right), \quad 
+                P_{i+1,j+1} = \left( \frac{i}{m}, \frac{j}{n} \right).
+                \]
+                \begin{figure}[H]
+                    \centering
+                    \begin{tikzpicture}[scale=3]
+                        % Grid lines
+                        \draw[dashed] (1, 0) -- (1, 1);
+                        \draw[dashed] (0, 1) -- (1, 1);
+                
+                        % Points
+                        \node at (0, 0) [circle, fill, inner sep=1pt, label=above right:{$P_{ij}$}] {};
+                        \node at (1, 0) [circle, fill, inner sep=1pt, label=below right:{$P_{i+1,j}$}] {};
+                        \node at (0, 1) [circle, fill, inner sep=1pt, label=above right:{$P_{i,j+1}$}] {};
+                        \node at (1, 1) [circle, fill, inner sep=1pt, label=above right:{$P_{i+1,j+1}$}] {};
+                        
+                        % Rectangle
+                        \draw (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- cycle;
+                        
+                        % Axis labels for fractions
+                        \node at (1, -0.05) [below] {$\frac{i}{m}$};
+                        \node at (-0.05, 1) [left] {$\frac{j}{n}$};
+                        \node at (0, -0.05) [below] {$\frac{i-1}{m}$};
+                        \node at (-0.05, 0) [left] {$\frac{j-1}{n}$};
+                    \end{tikzpicture}
+                    \caption{Coordonnées des nœuds d'un rectangle dans un maillage 2D.}
+                \end{figure}
+                Chacun des rectangles est ensuite découpé en deux triangles de façon aléatoire :
+                \[
+                (P_{i+1,j}, P_{i+1,j+1}, P_{ij}), \quad (P_{i,j+1}, P_{ij}, P_{i+1,j+1}),
+                \]
+                ou bien :
+                \[
+                (P_{ij}, P_{i+1,j}, P_{i,j+1}), \quad (P_{i+1,j+1}, P_{i,j+1}, P_{i+1,j}).
+                \]
+                \begin{figure}[H]
+                    \centering
+                    \begin{tikzpicture}[scale=2]
+                        % First rectangle
+                        \draw (0, 0) -- (1, 0) -- (1, 1) -- (0, 1) -- cycle;
+                        \draw (0, 0) -- (1, 1);
+                        \node at (0.5, -0.1) {$(P_{i+1,j}, P_{i+1,j+1}, P_{ij})$};
+                        \node at (0.5, 1.1) {$(P_{i,j+1}, P_{ij}, P_{i+1,j+1})$};
+                    \end{tikzpicture}
+                    \caption{Découpage du rectangle en triangles.}
+                \end{figure}
+            \end{enumerate}
+
+        \item \textbf{Classe vecteur :} gestion des vecteurs
+        \item \textbf{Classe Sparse :} gestion des matrices creuses en utilisant des \texttt{map}
+
+        \item \textbf{Classe éléments finis :} calcul des matrices de masse et de rigidité élémentaires
+        \begin{enumerate}[label=\alph*.]
+            \item Implémenter les classes \texttt{EF1D} et \texttt{EF2D} héritant de la classe \texttt{EF}, pour calculer les matrices de masse et de rigidité \(M^\ell\) et \(K^\ell\)
+            \item Les expressions sont données en fonction des sommets \(S^{\ell}_1, S^{\ell}_2\) d'un segment et \(S^{\ell}_1, S^{\ell}_2, S^{\ell}_3\) d'un triangle. Nous définissons les termes suivants :
+                \[
+                s_{ij} = S^{\ell}_j - S^{\ell}_i, \quad m = \text{mes}(S^{\ell}_1,S^{\ell}_2, S^{\ell}_3) = \frac{1}{2} |s_{12} \times s_{13}|
+                \]
+            \item Pour un segment :
+                \[
+                M_{\ell} = \frac{|s_{12}|}{6} \begin{pmatrix} 2 & 1 \\ 1 & 2 \end{pmatrix} 
+                \quad \text{et} \quad
+                K_{\ell} = \frac{1}{|s_{12}|} \begin{pmatrix} 1 & -1 \\ -1 & 1 \end{pmatrix}
+                \]
+            \item Pour un triangle :
+                \[
+                M_{\ell} = \frac{m}{12} \begin{pmatrix} 2 & 1 & 1 \\ 1 & 2 & 1 \\ 1 & 1 & 2 \end{pmatrix}
+                \quad \text{et} \quad
+                K_{\ell} = \frac{1}{4m} \begin{pmatrix} s_{23}|s_{23} & -s_{13}|s_{23} & s_{12}|s_{23} \\ -s_{13}|s_{23} & s_{13}|s_{13} & -s_{12}|s_{13} \\ s_{12}|s_{23} & -s_{12}|s_{13} & s_{12}|s_{12} \end{pmatrix}
+                \]
+        \end{enumerate}
+
+        \item \textbf{Classe Neumann :} résolution de l'équation
+        \begin{enumerate}[label=\alph*.]
+            \item Implémenter le constructeur pour initialiser le maillage, le nombre d'onde \(k\), et les fonctions \(f\) et \(u_{\text{exacte}}\) (si connue).
+            \item Fonction \texttt{assembleMatrices} pour assembler les matrices globales \(\mathbb{M}\) et \(\mathbb{K}\).
+            \item Fonction \texttt{resoudre} pour construire et résoudre le système \((\mathbb{K} + k^2 \mathbb{M}) \vec{U} = \mathbb{M} \vec{F}\).
+            \item Fonction \texttt{calculErreur\_L2} pour calculer l'erreur \(L^2\) entre la solution exacte et la solution approchée qui s'écrit : 
+                \[
+                \text{erreur} = \sqrt{\int_{\Omega} |u - u_{\text{exacte}}|^2 \, dx} = \sqrt{ (\vec{U} - \vec{U}_{\text{exacte}})^T \mathbb{M} (\vec{U} - \vec{U}_{\text{exacte}}) }
+                \]
+            \item Fonction \texttt{exporte} pour sauvegarder la solution et les coordonnées dans un fichier 
+        \end{enumerate}
+
+    \end{enumerate}
+
+
+\end{document}
