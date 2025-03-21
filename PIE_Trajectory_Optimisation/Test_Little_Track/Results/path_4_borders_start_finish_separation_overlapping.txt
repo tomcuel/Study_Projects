@@ -1,0 +1,7 @@
+shortest path : 
+Segment : (-1.5,1) -> (-1,1)
+Segment : (-1,1) -> (-0.5,0.5)
+Segment : (-0.5,0.5) -> (-0.5,-0.5)
+Segment : (-1,-1) -> (-0.5,-0.5)
+Segment : (-1.5,-1) -> (-1,-1)
+shortest path length : 3.41421
