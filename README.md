@@ -24,6 +24,7 @@
 ---
 
 <h2 id="chess-engine">♟️ Chess Engine</h2>
+
 Repository: [Chess_Engine](./Chess_Game_C_IN104)  
 Language: **C**  
 **Notes:** This project was developed for a computer science course.
@@ -33,6 +34,7 @@ The project includes a basic game implementation, introduction of a simple AI, a
 ---
 
 <h2 id="differentiable-optimisation">⚙️ Differentiable Optimisation</h2>
+
 Repository: [Differentiable_Optimisation_Projects](./Differentiable_Optimisation_Projects)  
 Language: **Python**  
 **Notes:** This repository contains two projects exploring both theoretical understanding and practical applications of differentiable optimization methods.
@@ -41,6 +43,7 @@ One implements Newton’s method for solving equilibrium problems, and the other
 ---
 
 <h2 id="finite-element-simulation">🧮 Finite Element Simulation</h2>
+
 Repository: [Elements_Finis_Simulation](./Elements_Finis_Simulation)  
 Language: **MATLAB**   
 **Notes:** The first lab focuses on a basic implementation of the Finite Element Method for solving a Poisson equation.
@@ -49,6 +52,7 @@ The second lab goes further by simulating the flow of an incompressible, viscous
 ---
 
 <h2 id="firing-a-thermoformed-part">🔥 Firing a thermoformed part</h2>
+
 Repository: [Matlab-Project](./Matlab-Project)  
 Language: **MATLAB**   
 **Notes:** Compute the temperature map in an oven for firing a thermoformed part.
@@ -57,6 +61,7 @@ Covers direct (effect of heater placement), inverse (heater settings for target 
 ---
 
 <h2 id="sqp-algorithm">⚙️ SQP Algorithm</h2>
+
 Repository: [Optimization_SQP_Python](./Optimization_SQP_Python)  
 Language: **Python**  
 **Notes:** Implementation of the Sequential Quadratic Programming (SQP) algorithm to minimize an objective function under constraints.
@@ -64,6 +69,7 @@ Language: **Python**
 ---
 
 <h2 id="pie-trajectory-optimisation">🚀 PIE Trajectory Optimisation</h2>
+
 Repository: [PIE_Trajectory_Optimisation](./PIE_Trajectory_Optimisation)  
 Language: **C++**  
 **Notes:** Trajectory planning in a complex environment with obstacles using Dijkstra’s algorithm.
@@ -72,6 +78,7 @@ Used for predicting shortest paths for autonomous vehicles and as practice in mo
 ---
 
 <h2 id="pie-vehicule-dynamic">🚗 PIE Vehicule Dynamic</h2>
+
 Repository: [PIE_Vehicule_Dynamic](./PIE_Vehicule_Dynamic)  
 Language: **Python**  
 **Notes:** Optimization of vehicle speed and power output to complete laps within a target time for the Shell Eco Marathon.
@@ -80,6 +87,7 @@ Parameters can be adapted for different vehicles, with autonomous driving contro
 ---
 
 <h2 id="real-estate-market-analysis">🏘️ Real Estate Market Analysis</h2>
+
 Repository: [Real_Estate_Market_Analysis_Project](./Real_Estate_Market_Analysis_Project)  
 Language: **R**  
 **Notes:** Analysis of the real estate market in Ille-et-Vilaine, France.
@@ -88,6 +96,7 @@ Uses historical data to identify factors affecting house prices and build simple
 ---
 
 <h2 id="statistic-learning">📊 Statistic Learning</h2>
+
 Repository: [Statistic_Learning_Project](./Statistic_Learning_Project)  
 Language: **R**  
 **Notes:** Classification of raisins into two varieties (Kecimen and Besni) using physical characteristics for final project applying statistical learning methods from the course.
@@ -95,6 +104,7 @@ Language: **R**
 ---
 
 <h2 id="tipe">🔬 TIPE</h2>
+
 Repository: [TIPE](./TIPE)  
 Language: **Python**  
 **Notes:** Preparatory classes project for nationwide exams.
@@ -104,6 +114,7 @@ Includes static and dynamic experiments, data analysis, visualization, and model
 ---
 
 <h2 id="finite-elements-c">🧮 Finite Elements C++</h2>
+
 Repository: [cpp_Elements_Finis_Neumann](./cpp_Elements_Finis_Neumann)  
 Language: **C++**  
 **Notes:** Implementation of the Finite Element Method in C++ to solve a Neumann problem.
