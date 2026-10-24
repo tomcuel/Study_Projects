@@ -43,7 +43,6 @@ git pull                                   # be up-to-date before merging
 
 # Clone : filter-repo refuse to run on a bare repo, so we need to clone it first
 git clone https://github.com/you/repo1.git ../repo1
-cd repo1
 
 # Rewrite all the history so that the files are under repo1/
 git -C ../repo1 filter-repo --to-subdirectory-filter repo1
@@ -52,14 +51,17 @@ git -C ../repo1 branch --show-current
 # Merge the rewritten history into the main repo
 git remote add repo1 ../repo1
 git fetch repo1 --no-tags                  # --no-tags avoid tags conflicts between repos
-git merge repo1/main --allow-unrelated-histories -m "Merge repo1 into study-projects"
+git merge repo1/main --allow-unrelated-histories -m "Merge repo1 into Study_Projects"
 git remote remove repo1
 
 # Verification
 git log --oneline --graph -n 20            # repo1 history should be present
 git push origin main
-```
 
+# Delete the temporary clone
+rm -rf ../repo1
+```
+The issue with my first projects is that I was the rebasing and squashing commits, which makes it impossible to keep the merge history, as I didn't wanted to proceed with the merges again only the last projects will have the full history.
 
 ---
 
