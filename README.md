@@ -84,7 +84,7 @@ Language: **Julia**
 <h2 id="deep-learning-i">🤖 Deep Learning I</h2>
 
 Repository: [Deep_Learning_I](./Deep_Learning_I)  
-Language: **Python, PyTorch**
+Language: **Python, PyTorch**  
 **Notes:** Implementation of neural networks from scratch, including MLP, CNN, LSTM and Transformers. 
 The projects cover classification, deep dream, style transfer, super resolution, and autoregressive music generation.
 
